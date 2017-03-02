@@ -4,7 +4,7 @@ import de.bezier.guido.*;
 public final static int NUM_ROWS = 20;
 public final static int NUM_COLS = 20;
 private MSButton[][] buttons = new MSButton[NUM_ROWS] [NUM_COLS]; //2d array of minesweeper buttons
-private ArrayList <MSButton> bombs; //ArrayList of just the minesweeper buttons that are mined
+private ArrayList <MSButton> bombs = new ArrayList<MSButton>(); //ArrayList of just the minesweeper buttons that are mined
 
 void setup ()
 {
@@ -14,15 +14,23 @@ void setup ()
     // make the manager
     Interactive.make( this );
     
-    //your code to declare and initialize buttons goes here
-    for (int i = 0; i < NUM_ROWS; i++)
-        for (int o = 0; o < NUM_COLS; o++)
-            buttons[i] [o] = new MSButton(i,o);            
-    setBombs();
+        //your code to declare and initialize buttons goes here
+    for (int r = 0; r < buttons.length; r++)
+        for (int c = 0; c < buttons[r].length; c++)
+            buttons[r] [c] = new MSButton(r,c);
+    for (int i = 0; i < 10; i++)
+        setBomb();
 }
-public void setBombs()
+public void setBomb()
 {
-    
+    int r = (int)(Math.random()*NUM_ROWS);
+    int c = (int)(Math.random()*NUM_COLS);
+    if (!bombs.contains(buttons[r][c]))
+    {
+        bombs.add(buttons[r][c]);
+    }
+    else
+        setBomb();
 }
 
 public void draw ()
@@ -77,15 +85,23 @@ public class MSButton
     public void mousePressed () 
     {
         clicked = true;
-        //your code here
+        if (bombs.contains(this))
+            displayLosingMessage();
+        else if (countBombs(r, c) > 0)
+            setLabel(countBombs(r,c));
+        else 
+            for (int row = 0; row < r +3; row++)
+                for (int col =0; col < c +3; col++)
+                    if (isValid(row,col))
+                        buttons[row][col].mousePressed();
     }
 
     public void draw () 
     {    
         if (marked)
             fill(0);
-        // else if( clicked && bombs.contains(this) ) 
-        //     fill(255,0,0);
+         else if( clicked && bombs.contains(this) ) 
+             fill(255,0,0);
         else if(clicked)
             fill( 200 );
         else 
@@ -101,13 +117,17 @@ public class MSButton
     }
     public boolean isValid(int r, int c)
     {
-        //your code here
+        if (r >= 0 && r < 20 && c >=0 && c < 20)
+            return true;
         return false;
     }
     public int countBombs(int row, int col)
     {
         int numBombs = 0;
-        //your code here
+        for (int r = row; r < row+3; r++)
+            for (int c = col; c < col + 3; c++)
+                if (isValid(r,c) && bombs.contains(buttons[r][c]))
+                    numbombs++;
         return numBombs;
     }
 }
