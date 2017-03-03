@@ -41,16 +41,24 @@ public void draw ()
 }
 public boolean isWon()
 {
-    //your code here
-    return false;
+    for (int r = 0; r < NUM_ROWS; r++)
+        for (int c = 0; c < NUM_COLS; c++)
+            if (!bombs.contains(buttons[r][c]) && !buttons[r][c].isClicked())
+                return false;
+    return true;
 }
 public void displayLosingMessage()
 {
-    //your code here
+    buttons[5][8].setLabel("L");
+    buttons[5][9].setLabel("O");
+    buttons[5][10].setLabel("S");
+    buttons[5][11].setLabel("E");
 }
 public void displayWinningMessage()
 {
-    //your code here
+    buttons[5][9].setLabel("W");
+    buttons[5][10].setLabel("I");
+    buttons[5][11].setLabel("N");
 }
 
 public class MSButton
@@ -86,14 +94,16 @@ public class MSButton
     {
         clicked = true;
         if (bombs.contains(this))
+        {
             displayLosingMessage();
+        }
         else if (countBombs(r, c) > 0)
-            setLabel(countBombs(r,c));
+            setLabel(str(countBombs(r,c)));
         else 
-            for (int row = 0; row < r +3; row++)
-                for (int col =0; col < c +3; col++)
-                    if (isValid(row,col))
-                        buttons[row][col].mousePressed();
+            for (int row = r - 1; row < r + 2; row++)
+                for (int col = c - 1; col < c + 2; col++)
+                    if (isValid(row,col) && !buttons[row][col].isClicked())
+                        buttons[row ][col].mousePressed();
     }
 
     public void draw () 
@@ -124,10 +134,10 @@ public class MSButton
     public int countBombs(int row, int col)
     {
         int numBombs = 0;
-        for (int r = row; r < row+3; r++)
-            for (int c = col; c < col + 3; c++)
+        for (int r = row -1; r < row+2; r++)
+            for (int c = col -1; c < col + 2; c++)
                 if (isValid(r,c) && bombs.contains(buttons[r][c]))
-                    numbombs++;
+                    numBombs++;
         return numBombs;
     }
 }
