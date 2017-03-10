@@ -18,7 +18,7 @@ void setup ()
     for (int r = 0; r < buttons.length; r++)
         for (int c = 0; c < buttons[r].length; c++)
             buttons[r] [c] = new MSButton(r,c);
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 50; i++)
         setBomb();
 }
 public void setBomb()
@@ -37,7 +37,9 @@ public void draw ()
 {
     background( 0 );
     if(isWon())
+    {
         displayWinningMessage();
+    }
 }
 public boolean isWon()
 {
@@ -49,6 +51,7 @@ public boolean isWon()
 }
 public void displayLosingMessage()
 {
+    noLoop();
     buttons[5][8].setLabel("L");
     buttons[5][9].setLabel("O");
     buttons[5][10].setLabel("S");
@@ -56,6 +59,7 @@ public void displayLosingMessage()
 }
 public void displayWinningMessage()
 {
+    noLoop();
     buttons[5][9].setLabel("W");
     buttons[5][10].setLabel("I");
     buttons[5][11].setLabel("N");
